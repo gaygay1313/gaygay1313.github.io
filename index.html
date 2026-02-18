@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 灵魂伴侣匹配器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+        }
+        h1 {
+            color: #4a89dc;
+            margin-bottom: 20px;
+        }
+        .description {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-section {
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            border: 2px solid #c0d6e8;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4a89dc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #3b73b5;
+        }
+        .result {
+            font-size: 18px;
+            color: #4a89dc;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .user-list {
+            margin-top: 20px;
+        }
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .user-item:hover {
+            background-color: #e9ecef;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .user-status {
+            font-size: 14px;
+            color: #28a745;
+        }
+        .contact-btn {
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .contact-btn:hover {
+            background-color: #5a6268;
+        }
+        .join-pool {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+        }
+        .join-pool h2 {
+            color: #4a89dc;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #c0d6e8;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .submit-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        /* 收款码弹窗样式 */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .payment-modal-content {
+            background-color: #ffffff;
+            margin: 10% auto;
+            padding: 30px;
+            border: none;
+            width: 350px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .qr-code {
+            margin: 20px 0;
+        }
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+        }
+        .payment-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        .close-payment {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .close-payment:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MBTI 灵魂伴侣匹配器</h1>
+        <p class="description">找到和你性格一样的人，聊聊吧！</p>
+        <div class="input-section">
+            <input type="text" id="mbtiInput" placeholder="例如：INTJ、ENFP">
+            <button id="matchButton">看看有多少人和我一样</button>
+        </div>
+        <div class="result" id="result"></div>
+        
+        <!-- 加入匹配池区域 -->
+        <div class="join-pool">
+            <h2>加入匹配池</h2>
+            <div class="form-group">
+                <label for="nickname">你的昵称</label>
+                <input type="text" id="nickname" placeholder="请输入你的昵称">
+            </div>
+            <div class="form-group">
+                <label for="wechat">你的微信号</label>
+                <input type="text" id="wechat" placeholder="请输入你的微信号">
+            </div>
+            <div class="form-group">
+                <label for="joinMbti">你的MBTI</label>
+                <input type="text" id="joinMbti" placeholder="例如：INTJ、ENFP">
+            </div>
+            <button class="submit-btn" id="joinButton">提交加入</button>
+        </div>
+    </div>
+    
+    <!-- 提示框 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>已加入匹配池！你可以看到别人了。</p>
+        </div>
+    </div>
+    
+    <!-- 收款码弹窗 -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <h3>解锁联系方式</h3>
+            <div class="qr-code">
+                <img src="wechat_qr.png.jpg" alt="微信收款码">
+            </div>
+            <div class="payment-text">支付3元，即可查看联系方式</div>
+            <button class="close-payment" id="closePayment">关闭</button>
+        </div>
+    </div>
+    <script>
+        // 获取DOM元素
+        const mbtiInput = document.getElementById('mbtiInput');
+        const joinMbtiInput = document.getElementById('joinMbti');
+        const matchButton = document.getElementById('matchButton');
+        const joinButton = document.getElementById('joinButton');
+        const modal = document.getElementById('myModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+        const paymentModal = document.getElementById('paymentModal');
+        const closePaymentBtn = document.getElementById('closePayment');
+        
+        // 显示收款码弹窗的函数
+        function showPaymentModal() {
+            paymentModal.style.display = 'block';
+        }
+        
+        // 关闭收款码弹窗的函数
+        function closePaymentModal() {
+            paymentModal.style.display = 'none';
+        }
+        
+        // 当用户在上方输入MBTI时，自动填充下方的MBTI输入框
+        mbtiInput.addEventListener('input', function() {
+            joinMbtiInput.value = this.value;
+        });
+        
+        // 为MBTI输入框添加回车键触发功能
+        mbtiInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                // 阻止回车键的默认行为
+                e.preventDefault();
+                
+                // 只有当输入框不为空时才触发
+                if (this.value.trim()) {
+                    // 触发匹配按钮的点击事件
+                    matchButton.click();
+                }
+            }
+        });
+        
+        // 查看匹配按钮点击事件
+        matchButton.addEventListener('click', function() {
+            const resultDiv = document.getElementById('result');
+            const userInputMbti = mbtiInput.value.toUpperCase(); // 获取用户输入的MBTI并转为大写
+            
+            if (!userInputMbti) {
+                resultDiv.textContent = '请先输入你的MBTI类型';
+                return;
+            }
+            
+            // 从localStorage获取所有用户
+            const allUsers = getUsersFromLocalStorage();
+            
+            // 筛选MBTI匹配的用户
+            const matchedUsers = allUsers.filter(user => user.mbti === userInputMbti);
+            
+            // 显示匹配用户数量
+            resultDiv.textContent = `当前有 ${matchedUsers.length} 个和你同类型的用户`;
+            
+            // 生成用户列表
+            const userListDiv = document.createElement('div');
+            userListDiv.className = 'user-list';
+            
+            // 清除之前的用户列表
+            const existingList = document.querySelector('.user-list');
+            if (existingList) {
+                existingList.remove();
+            }
+            
+            // 生成随机颜色
+            function getRandomColor() {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+            
+            // 如果有匹配的用户，创建用户项
+            if (matchedUsers.length > 0) {
+                matchedUsers.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    
+                    // 头像
+                    const avatar = document.createElement('div');
+                    avatar.className = 'avatar';
+                    avatar.style.backgroundColor = getRandomColor();
+                    avatar.textContent = user.name.charAt(0);
+                    
+                    // 用户信息
+                    const userInfo = document.createElement('div');
+                    userInfo.className = 'user-info';
+                    
+                    const userName = document.createElement('div');
+                    userName.className = 'user-name';
+                    userName.textContent = user.name;
+                    
+                    const userStatus = document.createElement('div');
+                    userStatus.className = 'user-status';
+                    userStatus.textContent = '在线';
+                    
+                    userInfo.appendChild(userName);
+                    userInfo.appendChild(userStatus);
+                    
+                    // 联系方式按钮
+                    const contactBtn = document.createElement('button');
+                    contactBtn.className = 'contact-btn';
+                    contactBtn.textContent = '私信解锁 🔒';
+                    // 添加点击事件
+                    contactBtn.addEventListener('click', showPaymentModal);
+                    
+                    // 组装用户项
+                    userItem.appendChild(avatar);
+                    userItem.appendChild(userInfo);
+                    userItem.appendChild(contactBtn);
+                    
+                    userListDiv.appendChild(userItem);
+                });
+            } else {
+                // 没有匹配用户时的提示
+                const noMatchText = document.createElement('p');
+                noMatchText.style.color = '#666';
+                noMatchText.style.marginTop = '20px';
+                noMatchText.textContent = '暂时没有找到和你同类型的用户，快来加入匹配池吧！';
+                userListDiv.appendChild(noMatchText);
+            }
+            
+            // 将用户列表添加到页面
+            resultDiv.after(userListDiv);
+        });
+        
+        // 从localStorage获取用户数据
+        function getUsersFromLocalStorage() {
+            const usersJson = localStorage.getItem('mbtiUsers');
+            return usersJson ? JSON.parse(usersJson) : [];
+        }
+        
+        // 保存用户数据到localStorage
+        function saveUserToLocalStorage(user) {
+            const users = getUsersFromLocalStorage();
+            users.push(user);
+            localStorage.setItem('mbtiUsers', JSON.stringify(users));
+        }
+        
+        // 提交加入按钮点击事件
+        joinButton.addEventListener('click', function() {
+            const nickname = document.getElementById('nickname').value;
+            const wechat = document.getElementById('wechat').value;
+            const mbti = document.getElementById('joinMbti').value;
+            
+            if (nickname && wechat && mbti) {
+                // 创建用户对象
+                const user = {
+                    id: Date.now(), // 使用时间戳作为唯一ID
+                    name: nickname,
+                    wechat: wechat,
+                    mbti: mbti.toUpperCase(), // 转为大写
+                    timestamp: new Date().toISOString()
+                };
+                
+                // 保存到localStorage
+                saveUserToLocalStorage(user);
+                
+                // 显示提示框
+                modal.style.display = 'block';
+                
+                // 清空表单
+                document.getElementById('nickname').value = '';
+                document.getElementById('wechat').value = '';
+                // 保留MBTI值
+            }
+        });
+        
+        // 关闭提示框
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // 点击提示框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // 关闭收款码弹窗按钮点击事件
+        closePaymentBtn.addEventListener('click', closePaymentModal);
+        
+        // 点击收款码弹窗外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target == paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
